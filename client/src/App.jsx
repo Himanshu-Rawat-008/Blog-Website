@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Projects from './pages/Projects';
 import SignIn from './pages/SignIn';
@@ -20,5 +20,5 @@ export default function App() {
                 <Route path='/about' element={<About />} />
             </Routes>
         </BrowserRouter>
-    )
-}
+    );
+};
