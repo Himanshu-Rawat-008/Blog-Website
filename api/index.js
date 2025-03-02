@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 
 // routes
 import userRoutes from './routes/user.route.js';
+import authRoutes from './routes/auth.route.js';
 
 // for .env files
 dotenv.config();
@@ -20,7 +21,7 @@ async function run() {
         console.log('Pinged your deployment. You successfully connected to MongoDB!');
     } finally {
         // Ensures that the client will close when you finish/error
-        await mongoose.disconnect();
+        // await mongoose.disconnect();
     }
 }
 run().catch(console.dir);
@@ -28,6 +29,8 @@ run().catch(console.dir);
 // runnning application
 const app = express();
 const port = 3000;
+// to handle json request by express
+app.use(express.json());
 
 // starting application
 app.listen(port, () => {
@@ -35,3 +38,4 @@ app.listen(port, () => {
 });
 
 app.use('/api/user', userRoutes);
+app.use('/api/auth', authRoutes);
