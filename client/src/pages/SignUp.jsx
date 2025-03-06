@@ -1,8 +1,50 @@
 
-import { Button, Label, TextInput } from 'flowbite-react';
-import { Link } from 'react-router-dom';
+import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function SignUp() {
+    const [formData, setFormData] = useState({});
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        setErrorMessage(null);
+        setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!formData.username || !formData.email || !formData.password) {
+            return setErrorMessage('Please fill out all fields.');
+        }
+        try {
+            setLoading(true);
+            // eslint-disable-next-line no-undef
+            const res = await fetch('/api/auth/signup', {
+                method: 'Post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            }).then((res) => res.json());
+
+            if (res.statusCode = 500 && res.message.includes('duplicate key')) {
+                if (res.message.includes('username')) {
+                    setErrorMessage('Username already exists.');
+                }
+                if (res.message.includes('email')) {
+                    setErrorMessage('Email already exists.');
+                }
+            }
+            if (res.success) {
+                navigate('./sign-in');
+            }
+        } catch (err) {
+            return setErrorMessage(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
     return (
         <div className="min-h-screen mt-20">
             <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
@@ -18,37 +60,46 @@ export default function SignUp() {
                 </div>
                 {/* Right Side */}
                 <div className="flex-1">
-                    <form className='flex flex-col gap-4'>
+                    <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
                         <div className=''>
                             <Label value='Your Username' />
                             <TextInput
                                 type='text'
                                 placeholder='Username'
                                 id='username'
+                                onChange={handleChange}
                             />
                         </div>
                         <div className=''>
                             <Label value='Your Email' />
                             <TextInput
-                                type='text'
+                                type='email'
                                 placeholder='name@example.com'
                                 id='email'
+                                onChange={handleChange}
                             />
                         </div>
                         <div className=''>
                             <Label value='Your Password' />
                             <TextInput
-                                type='text'
+                                type='password'
                                 placeholder='Password'
                                 id='password'
+                                onChange={handleChange}
                             />
                         </div>
                         <Button
                             gradientDuoTone='purpleToPink'
                             type='submit'
-                        >
-                            Sign Up
-                        </Button>
+                        >{
+                                loading ? (
+                                    <>
+                                        <Spinner size='sm' />
+                                        <span className='pl-3'>Loading...</span>
+                                    </>
+                                ) :
+                                    ('Sign Up')
+                            } </Button>
                     </form>
                     <div className='flex gap-2 text-sm mt-5'>
                         <span>
@@ -56,6 +107,13 @@ export default function SignUp() {
                         </span>
                         <Link to='/sign-in' className='text-blue-500'>Sign In</Link>
                     </div>
+                    {
+                        errorMessage && (
+                            <Alert className='mt-5' color='failure'>
+                                {errorMessage}
+                            </Alert>
+                        )
+                    }
                 </div>
             </div>
         </div>
