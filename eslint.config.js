@@ -6,7 +6,10 @@ export default [
     pluginJs.configs.recommended,
     {
         rules: {
-            'no-unused-vars': 'warn',
+            'no-unused-vars': ['warn', {
+                'args': 'after-used',
+                'ignoreRestSiblings': true,
+            }],
             'no-undef': 'warn',
             'default-param-last': 0,
             'no-console': 'error',
@@ -32,6 +35,7 @@ export default [
             'no-restricted-syntax': ['error', 'LabeledStatement', 'WithStatement'],
             'no-continue': 0,
             'quotes': ['error', 'single'],
+            'no-const-assign': 'error',
         }
     }
 ];
