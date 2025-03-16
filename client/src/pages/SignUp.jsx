@@ -26,13 +26,14 @@ export default function SignUp() {
                 method: 'Post',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
-            }).then((res) => res.json());
+            });
+            const data =  await res.json();
 
-            if (res.statusCode = 500 && res.message.includes('duplicate key')) {
-                if (res.message.includes('username')) {
+            if (data.statusCode == 500 && data.message.includes('duplicate key')) {
+                if (data.message.includes('username')) {
                     setErrorMessage('Username already exists.');
                 }
-                if (res.message.includes('email')) {
+                if (data.message.includes('email')) {
                     setErrorMessage('Email already exists.');
                 }
             }
