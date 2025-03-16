@@ -2,25 +2,27 @@
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart, signInSuccess, signInFailure} from '../redux/user/userSlice.js';
 
 export default function SignIn() {
-    const [formData, setFormData] = useState({});
-    const [errorMessage, setErrorMessage] = useState(null);
-    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { loading, error: errorMessage } = useSelector(state => state.user); 
+
+    const [formData, setFormData] = useState({});
 
     const handleChange = (e) => {
-        setErrorMessage(null);
         setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.email || !formData.password) {
-            return setErrorMessage('Please fill out all fields.');
+            dispatch(signInFailure('Please fill all the fields.'));
         }
         try {
-            setLoading(true);
+            dispatch(signInStart());
             // eslint-disable-next-line no-undef
             const result = await fetch('/api/auth/signin', {
                 method: 'POST',
@@ -29,21 +31,15 @@ export default function SignIn() {
             });
             const data = await result.json();
 
-            if (data.statusCode == 500 && data.message.includes('duplicate key')) {
-                if (data.message.includes('username')) {
-                    setErrorMessage('Username already exists.');
-                }
-                if (data.message.includes('email')) {
-                    setErrorMessage('Email already exists.');
-                }
+            if (data?.success === false ) {
+                dispatch(signInFailure(data.message));
             }
             if (result.ok) {
+                dispatch(signInSuccess(data));
                 navigate('/');
             }
         } catch (err) {
-            return setErrorMessage(err.message);
-        } finally {
-            setLoading(false);
+            dispatch(signInFailure(err.message));
         }
     };
     return (

@@ -42,6 +42,7 @@ export default [
                     'req',
                     'res',
                     'e',
+                    'state',
                 ]
             }],
             'no-shadow': 0,
@@ -55,6 +56,7 @@ export default [
             'no-unused-vars': 'error',
             'quotes': ['error', 'single'],
             'no-undef': 'error',
+            'semi': 'error',
         },
     },
 ];
