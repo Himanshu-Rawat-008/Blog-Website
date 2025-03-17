@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInSuccess, signInFailure} from '../redux/user/userSlice.js';
+import OAuth from '../components/OAuth.jsx';
 
 export default function SignIn() {
     const navigate = useNavigate();
@@ -79,15 +80,17 @@ export default function SignIn() {
                         <Button
                             gradientDuoTone='purpleToPink'
                             type='submit'
-                        >{
-                                loading ? (
-                                    <>
-                                        <Spinner size='sm' />
-                                        <span className='pl-3'>Loading...</span>
-                                    </>
-                                ) :
-                                    ('Sign In')
-                            } </Button>
+                        >
+                            {loading ? (
+                                <>
+                                    <Spinner size='sm' />
+                                    <span className='pl-3'>Loading...</span>
+                                </>
+                            ) :
+                                ('Sign In')
+                            } 
+                        </Button>
+                        <OAuth />
                     </form>
                     <div className='flex gap-2 text-sm mt-5'>
                         <span>

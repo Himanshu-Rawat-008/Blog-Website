@@ -57,6 +57,7 @@ export default [
             'quotes': ['error', 'single'],
             'no-undef': 'error',
             'semi': 'error',
+            'quotes': ['error', 'single'],
         },
     },
 ];
