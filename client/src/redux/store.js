@@ -4,9 +4,14 @@ import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import themeReducer from './theme/themeSlice.js';
 
+export const REDUCERS = {
+    user: 'user',
+    theme: 'theme',
+};
+
 const rootReducer = combineReducers({
-    user: userReducer,
-    theme: themeReducer
+    [REDUCERS.user]: userReducer,
+    [REDUCERS.theme]: themeReducer
 });
 
 const persistConfig = {
