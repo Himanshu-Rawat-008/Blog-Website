@@ -4,6 +4,7 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon, FaSun } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleTheme } from '../redux/theme/themeSlice.js';
+import { DASHBOARD_TABS } from '../pages/Constants.js';
 export default function Header() {
     const path = useLocation().pathname;
     const { currentUser } = useSelector(state => state.user);
@@ -50,7 +51,7 @@ export default function Header() {
                             <span className='block text-sm'>@{currentUser.username}</span>
                             <span className='block text-sm font-medium truncate'>{currentUser.email}</span>
                         </Dropdown.Header>
-                        <Link to={'/dashboard?tab=profile'}>
+                        <Link to={`/dashboard?tab=${DASHBOARD_TABS.profile}`}>
                             <Dropdown.Item>Profile</Dropdown.Item>
                         </Link>
                         <Dropdown.Divider />
