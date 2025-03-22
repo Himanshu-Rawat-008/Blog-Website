@@ -19,7 +19,7 @@ export default function DashboardSidebar() {
     return (
         <Sidebar className='w-full md:w-56'>
             <Sidebar.Items>
-                <Sidebar.ItemGroup>
+                <Sidebar.ItemGroup >
                     <Link
                         to={`?tab=${DASHBOARD_TABS.profile}`}
                     >
