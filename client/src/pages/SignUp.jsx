@@ -3,6 +3,8 @@ import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import OAuth from '../components/OAuth';
+import { authInternalSignUp } from '../clients';
+import { AUTH_STRINGS } from '../AppStrings';
 
 export default function SignUp() {
     const [formData, setFormData] = useState({});
@@ -18,24 +20,20 @@ export default function SignUp() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.username || !formData.email || !formData.password) {
-            return setErrorMessage('Please fill out all fields.');
+            return setErrorMessage(AUTH_STRINGS.Empty_Field_Error);
         }
         try {
             setLoading(true);
             // eslint-disable-next-line no-undef
-            const res = await fetch('/api/auth/signup', {
-                method: 'Post',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            });
+            const res = await authInternalSignUp(formData);
             const data =  await res.json();
 
             if (data.statusCode == 500 && data.message.includes('duplicate key')) {
                 if (data.message.includes('username')) {
-                    setErrorMessage('Username already exists.');
+                    setErrorMessage(AUTH_STRINGS.User_Exists_Error);
                 }
                 if (data.message.includes('email')) {
-                    setErrorMessage('Email already exists.');
+                    setErrorMessage(AUTH_STRINGS.Email_Error);
                 }
             }
             if (res.success) {

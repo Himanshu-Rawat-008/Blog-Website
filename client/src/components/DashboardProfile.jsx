@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
+import { DashboardProfileStrings } from '../AppStrings.js';
 
 export default function DashboardProfile() {
     const { currentUser } = useSelector(state => state[REDUCERS.user]);
@@ -37,7 +38,7 @@ export default function DashboardProfile() {
             },
             () => {
                 //error
-                setImageFileUploadError('Could not upload image (File must be less than 2MB)');
+                setImageFileUploadError(DashboardProfileStrings.ImageFileUploadError);
                 setImageFileUploadingProgress(null);
                 setImageFile(null);
                 setImageFileUrl(null);

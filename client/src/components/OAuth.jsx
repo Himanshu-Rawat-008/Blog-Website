@@ -6,6 +6,7 @@ import { app } from '../firebase';
 import { useDispatch } from 'react-redux';
 import { signInFailure, signInSuccess } from '../redux/user/userSlice.js';
 import { useNavigate } from 'react-router-dom';
+import { authGoogleClient } from '../clients/index.js';
 
 export default function OAuth() {
     const navigate = useNavigate();
@@ -18,15 +19,7 @@ export default function OAuth() {
         try {
             const resultFromGoogle = await signInWithPopup(auth, provider);
             // eslint-disable-next-line no-undef
-            const res = await fetch('api/auth/google', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    name: resultFromGoogle.user.displayName,
-                    email: resultFromGoogle.user.email,
-                    googlePhotoUrl: resultFromGoogle.user.googlePhotoUrl,
-                }),
-            });
+            const res = await authGoogleClient(resultFromGoogle);
             const data = await res.json();
             if(res.ok) {
                 dispatch(signInSuccess(data));

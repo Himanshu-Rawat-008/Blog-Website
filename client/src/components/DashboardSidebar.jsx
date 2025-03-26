@@ -2,7 +2,7 @@ import { Sidebar } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { HiArrowSmRight, HiUser } from 'react-icons/hi';
 import { Link, useLocation } from 'react-router-dom';
-import { DASHBOARD_TABS } from '../pages/Constants';
+import { DASHBOARD_TABS } from '../AppStrings.js';
 
 export default function DashboardSidebar() {
     const location = useLocation();

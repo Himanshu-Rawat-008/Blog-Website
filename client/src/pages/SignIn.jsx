@@ -5,6 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInSuccess, signInFailure} from '../redux/user/userSlice.js';
 import OAuth from '../components/OAuth.jsx';
+import { authInternalSignIn } from '../clients/index.js';
+import { AUTH_STRINGS } from '../AppStrings.js';
 
 export default function SignIn() {
     const navigate = useNavigate();
@@ -20,16 +22,12 @@ export default function SignIn() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.email || !formData.password) {
-            dispatch(signInFailure('Please fill all the fields.'));
+            dispatch(signInFailure(AUTH_STRINGS.Empty_Field_Error));
         }
         try {
             dispatch(signInStart());
             // eslint-disable-next-line no-undef
-            const result = await fetch('/api/auth/signin', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            });
+            const result = await authInternalSignIn(formData);
             const data = await result.json();
 
             if (data?.success === false ) {
