@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 
 // routes
 import userRoutes from './routes/user.route.js';
@@ -31,6 +32,9 @@ const app = express();
 const port = 3000;
 // to handle json request by express
 app.use(express.json());
+
+// read token store in cookie
+app.use(cookieParser());
 
 // starting application
 app.listen(port, () => {
