@@ -11,7 +11,9 @@ import { updateStart,
     updateFailure,
     deleteUserStart,
     deleteUserSuccess,
-    deleteUserFailure } from '../redux/user/userSlice.js';
+    deleteUserFailure,
+    signOutSuccess
+} from '../redux/user/userSlice.js';
 import { useDispatch } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
@@ -135,6 +137,23 @@ export default function DashboardProfile() {
         }
     };
 
+    const onClickSignOut = async () => {
+        try {
+        // eslint-disable-next-line no-undef
+            const res = await fetch('/api/user/signout', {
+                method: 'POST',
+            });
+            const data = await res.json();
+            if(!res.ok) {
+                console.log(data.message);
+            } else {
+                dispatch(signOutSuccess());
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
         if(imageFile) {
             uploadImage();
@@ -227,7 +246,12 @@ export default function DashboardProfile() {
                     onClick={() => setShowModel(true)}>
                         Delete Account
                 </span>
-                <span  className='cursor-pointer'>Sign Out</span>
+                <span  
+                    className='cursor-pointer'
+                    onClick={() => onClickSignOut()}
+                >
+                    Sign Out
+                </span>
             </div>
             {
                 updateUserSuccess && (
