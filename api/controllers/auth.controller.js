@@ -46,7 +46,7 @@ export const signInController = async (req, res, next) => {
         }
 
         // eslint-disable-next-line no-undef
-        const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET_KEY);
+        const token = jwt.sign({ id: validUser._id, isAdmin: validUser.isAdmin }, process.env.JWT_SECRET_KEY);
         const { password: pass, ...rest } = validUser._doc;
 
         res.status(200).cookie('access_token', token, { httpOnly: true }).json(rest);
@@ -58,7 +58,7 @@ export const signInController = async (req, res, next) => {
 export const googleController = async (req, res, next) => {
     const { email, name, googlePhotoUrl} = req.body;
     try {
-        const user = await User.findOne({ email });
+        let user = await User.findOne({ email });
         if(!user) {
             const generatedPassword = Math.random().toString(36).slice(-8);
             const hashedPassword = bcryptjs.hashSync(generatedPassword, 10); 
@@ -69,9 +69,10 @@ export const googleController = async (req, res, next) => {
                 profilePicture: googlePhotoUrl,
             });
             await newUser.save();
+            user = newUser;
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
+        const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin  }, process.env.JWT_SECRET_KEY);
         const { password, ...rest} = user._doc;
         res.status(200).cookie('access_token', token, {httpOnly:true}).json(rest);
         
