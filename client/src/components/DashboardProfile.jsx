@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
+import { Link } from 'react-router-dom';
 import { DashboardProfileStrings } from '../AppStrings.js';
 import { updateStart,
     updateSuccess,
@@ -18,7 +19,7 @@ import { useDispatch } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 export default function DashboardProfile() {
-    const { currentUser, error } = useSelector(state => state[REDUCERS.user]);
+    const { currentUser, error, loading } = useSelector(state => state[REDUCERS.user]);
     
     const [imageFile, setImageFile ] = useState(null);
     const [imageFileUrl, setImageFileUrl] = useState(null);
@@ -236,9 +237,23 @@ export default function DashboardProfile() {
                     type='submit'
                     gradientDuoTone='purpleToBlue'
                     outline
+                    disabled={loading || imageFileUploading}
                 >
                     Update
                 </Button>
+                {
+                    currentUser && currentUser.isAdmin && (
+                        <Link to={'/create-post'}>
+                            <Button
+                                type='button'
+                                gradientDuoTone='purpleToPink'
+                                className='w-full'
+                            >
+                            Create Post
+                            </Button>
+                        </Link>
+                    )
+                }
             </form>
             <div className='text-red-500 flex justify-between mt-5'>
                 <span 
